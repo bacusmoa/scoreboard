@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Scoreboard</title>
   <style>
     body {
@@ -23,15 +23,32 @@
     h1, h2 {
       margin-bottom: 20px;
     }
-    input, select, button {
+    #controls {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 800px;
+      margin: 0 auto 30px auto;
       padding: 10px;
-      margin: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+    .control-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+    .control-group input,
+    .control-group select,
+    .control-group button {
+      flex: 1 1 auto;
+      min-width: 120px;
+      max-width: 180px;
+      padding: 8px;
+      font-size: 14px;
       border: none;
       border-radius: 5px;
-      font-size: 14px;
-    }
-    input, select {
-      width: 200px;
     }
     button {
       background-color: #6a11cb;
@@ -77,27 +94,26 @@
 <body>
   <h1>🎤 Scoreboard Voting</h1>
 
-  <div>
-    <input id="personName" type="text" placeholder="Enter name" />
-    <button onclick="addPerson()">Add Person</button>
+  <div id="controls">
+    <div class="control-group">
+      <input id="personName" type="text" placeholder="Enter name" />
+      <button onclick="addPerson()">Add Person</button>
+    </div>
+    <div class="control-group">
+      <select id="sharedNameSelect"></select>
+      <input id="juryPoints" type="number" placeholder="Jury points" min="1" />
+      <button onclick="addJuryVote()">Add Jury Vote</button>
+    </div>
+    <div class="control-group">
+      <input id="publicPoints" type="number" placeholder="Public points" />
+      <button onclick="addPublicVote()">Add Public Vote</button>
+    </div>
+    <div class="control-group">
+      <button onclick="undoLastAction()">Undo Last Action</button>
+    </div>
   </div>
 
-  <div>
-    <select id="sharedNameSelect"></select>
-    <input id="juryPoints" type="number" placeholder="Jury points" min="1" />
-    <button onclick="addJuryVote()">Add Jury Vote</button>
-  </div>
-
-  <div>
-    <input id="publicPoints" type="number" placeholder="Public points" />
-    <button onclick="addPublicVote()">Add Public Vote</button>
-  </div>
-
-  <div>
-    <button onclick="undoLastAction()">Undo Last Action</button>
-  </div>
-
-  <h2>Leaderboard</h2>
+  <h2>📊 Leaderboard</h2>
   <div id="scoreboard"></div>
 
   <script>
