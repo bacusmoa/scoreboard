@@ -69,10 +69,14 @@
       position: relative;
     }
     .entry {
-      background: rgba(255, 255, 255, 0.1);
-      padding: 20px;
+      background: #ffffff;
+      color: #000000;
+      border: 2px solid black;
+      background: #ffffff;
+      color: #000000;
+      padding: 10px 15px;
       margin: 5px 0;
-      border-radius: 10px;
+      border-radius: 8px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -80,14 +84,23 @@
       position: relative;
     }
     .entry.highlight {
-      background: rgba(255, 255, 255, 0.2);
+      background: #f0f0f0;
       transform: scale(1.05);
     }
     .score {
-      font-size: 24px;
+      font-size: 20px;
       font-weight: bold;
-      min-width: 100px;
+      min-width: 80px;
       text-align: right;
+    }
+    body.present-mode {
+      background: #00ff00 !important;
+    }
+    #presentToggles {
+      margin: 20px auto;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
     }
   </style>
 </head>
@@ -101,16 +114,16 @@
     </div>
     <div class="control-group">
       <select id="sharedNameSelect"></select>
-      <input id="juryPoints" type="number" placeholder="Jury points" min="1" />
-      <button onclick="addJuryVote()">Add Jury Vote</button>
-    </div>
-    <div class="control-group">
-      <input id="publicPoints" type="number" placeholder="Public points" />
-      <button onclick="addPublicVote()">Add Public Vote</button>
+      <input id="pointsInput" type="number" placeholder="Points" />
+      <button onclick="addPoints()">Add Points</button>
     </div>
     <div class="control-group">
       <button onclick="undoLastAction()">Undo Last Action</button>
     </div>
+  </div>
+
+  <div id="presentToggles">
+    <button onclick="togglePresentMode()">🎥 Toggle Present Mode</button>
   </div>
 
   <h2>📊 Leaderboard</h2>
@@ -169,29 +182,45 @@
       requestAnimationFrame(step);
     }
 
-    function addJuryVote() {
+    function addPoints() {
       const name = document.getElementById('sharedNameSelect').value;
-      const points = parseInt(document.getElementById('juryPoints').value);
+      const points = parseInt(document.getElementById('pointsInput').value);
       if (name && !isNaN(points) && people[name]) {
         saveState();
         people[name].jury += points;
         updateScoreboard(name);
-        document.getElementById('juryPoints').value = '';
+        document.getElementById('pointsInput').value = '';
       }
     }
 
-    function addPublicVote() {
-      const name = document.getElementById('sharedNameSelect').value;
-      const points = parseInt(document.getElementById('publicPoints').value);
-      if (name && !isNaN(points)) {
-        saveState();
-        people[name].public += points;
-        updateScoreboard(name);
-        document.getElementById('publicPoints').value = '';
-      }
+    function togglePresentMode() {
+      document.body.classList.toggle('present-mode');
     }
 
     function updateScoreboard(highlightName = null) {
+      function openEditDialog(name) {
+        const current = people[name];
+        const newJury = prompt(`Edit Jury Points for ${name}:`, current.jury);
+        const newPublic = prompt(`Edit Public Points for ${name}:`, current.public);
+        if (newJury === null || newPublic === null) return;
+        const juryVal = parseInt(newJury);
+        const publicVal = parseInt(newPublic);
+        if (!isNaN(juryVal) && !isNaN(publicVal)) {
+          saveState();
+          people[name].jury = juryVal;
+          people[name].public = publicVal;
+          updateScoreboard();
+        }
+      }
+
+      function confirmDelete(name) {
+        if (confirm(`Are you sure you want to delete ${name}?`)) {
+          saveState();
+          delete people[name];
+          updateSelect();
+          updateScoreboard();
+        }
+      }
       const board = document.getElementById('scoreboard');
       const sorted = Object.entries(people).sort((a, b) => {
         const totalA = a[1].jury + a[1].public;
@@ -217,6 +246,11 @@
         if (!entry) {
           entry = document.createElement('div');
           entry.className = 'entry';
+          entry.onclick = () => {
+            const action = prompt('Type "edit" to change points, or "delete" to remove:', 'edit');
+            if (action === 'edit') openEditDialog(name);
+            else if (action === 'delete') confirmDelete(name);
+          };
           entry.dataset.name = name;
           const label = document.createElement('div');
           label.className = 'label';
@@ -263,3 +297,4 @@
   </script>
 </body>
 </html>
+
