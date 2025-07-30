@@ -14,6 +14,7 @@
       text-align: center;
       padding: 20px;
       margin: 0;
+      position: relative; /* To position the top-right button */
     }
     @keyframes gradientBG {
       0% {background-position: 0% 50%;}
@@ -69,14 +70,10 @@
       position: relative;
     }
     .entry {
-      background: #ffffff;
-      color: #000000;
-      border: 2px solid black;
-      background: #ffffff;
-      color: #000000;
-      padding: 10px 15px;
+      background: #2a2a2a;
+      padding: 20px;
       margin: 5px 0;
-      border-radius: 8px;
+      border-radius: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -84,16 +81,30 @@
       position: relative;
     }
     .entry.highlight {
-      background: #f0f0f0;
+      background: rgba(255, 255, 255, 0.2);
       transform: scale(1.05);
     }
     .score {
-      font-size: 20px;
+      font-size: 24px;
       font-weight: bold;
-      min-width: 80px;
+      min-width: 100px;
       text-align: right;
     }
-    body.present-mode {
+    .present-mode body {
+      background: #111 !important;
+    }
+    .present-mode #controls {
+      display: none;
+    }
+    .present-mode #scoreboard .entry {
+      font-size: 1.8em;
+      background: #2a2a2a;
+    }
+    .present-mode h1,
+    .present-mode h2 {
+      font-size: 2em;
+    }
+    .green-screen body {
       background: #00ff00 !important;
     }
     #presentToggles {
@@ -102,9 +113,28 @@
       justify-content: center;
       gap: 10px;
     }
+    /* Semi Final button styling */
+    #semiFinalBtn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #fff;
+      color: #000;
+      padding: 10px 15px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      z-index: 1000;
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+    #semiFinalBtn:hover {
+      background-color: #ddd;
+    }
   </style>
 </head>
 <body>
+  <a id="semiFinalBtn" href="sf.html">Semi Final</a>
   <h1>🎤 Scoreboard Voting</h1>
 
   <div id="controls">
@@ -124,6 +154,7 @@
 
   <div id="presentToggles">
     <button onclick="togglePresentMode()">🎥 Toggle Present Mode</button>
+    <button onclick="toggleGreenScreen()">💚 Toggle Green Screen</button>
   </div>
 
   <h2>📊 Leaderboard</h2>
@@ -195,32 +226,18 @@
 
     function togglePresentMode() {
       document.body.classList.toggle('present-mode');
+      if (!document.body.classList.contains('present-mode')) {
+        document.body.classList.remove('green-screen');
+      }
+    }
+
+    function toggleGreenScreen() {
+      if (document.body.classList.contains('present-mode')) {
+        document.body.classList.toggle('green-screen');
+      }
     }
 
     function updateScoreboard(highlightName = null) {
-      function openEditDialog(name) {
-        const current = people[name];
-        const newJury = prompt(`Edit Jury Points for ${name}:`, current.jury);
-        const newPublic = prompt(`Edit Public Points for ${name}:`, current.public);
-        if (newJury === null || newPublic === null) return;
-        const juryVal = parseInt(newJury);
-        const publicVal = parseInt(newPublic);
-        if (!isNaN(juryVal) && !isNaN(publicVal)) {
-          saveState();
-          people[name].jury = juryVal;
-          people[name].public = publicVal;
-          updateScoreboard();
-        }
-      }
-
-      function confirmDelete(name) {
-        if (confirm(`Are you sure you want to delete ${name}?`)) {
-          saveState();
-          delete people[name];
-          updateSelect();
-          updateScoreboard();
-        }
-      }
       const board = document.getElementById('scoreboard');
       const sorted = Object.entries(people).sort((a, b) => {
         const totalA = a[1].jury + a[1].public;
@@ -246,11 +263,6 @@
         if (!entry) {
           entry = document.createElement('div');
           entry.className = 'entry';
-          entry.onclick = () => {
-            const action = prompt('Type "edit" to change points, or "delete" to remove:', 'edit');
-            if (action === 'edit') openEditDialog(name);
-            else if (action === 'delete') confirmDelete(name);
-          };
           entry.dataset.name = name;
           const label = document.createElement('div');
           label.className = 'label';
