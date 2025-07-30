@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Semi-Final Scoreboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #111, #222);
+      color: white;
+      margin: 0;
+      padding: 20px;
+      transition: background 0.5s ease;
+    }
+    body.present-mode {
+      background: #00ff00;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #controls {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    #controls input, #controls button {
+      padding: 10px;
+      font-size: 16px;
+      margin: 5px;
+    }
+    .board {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .qualify, .non-qualify {
+      flex: 1;
+      padding: 15px;
+      min-height: 300px;
+      transition: background-color 0.5s ease;
+    }
+    body.present-mode .qualify,
+    body.present-mode .non-qualify {
+      background: none;
+    }
+    .qualify h2, .non-qualify h2 {
+      text-align: center;
+    }
+    .entry {
+      background: #fff;
+      color: #000;
+      border-radius: 8px;
+      padding: 10px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.5s forwards;
+    }
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+$1
+  <a href="index.html" style="position: absolute; top: 20px; right: 20px; background: #fff; color: #000; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; z-index: 1000;">Home</a>
+  <h1>🎤 Semi-Final Scoreboard</h1>
+  <div id="controls">
+    <input id="personName" type="text" placeholder="Enter name" />
+    <button onclick="addPerson()">Add Person</button>
+    <button onclick="togglePresentMode()">Toggle Present Mode</button>
+    <br>
+  </div>
+  <div class="board">
+    <div class="non-qualify">
+      <h2>Did Not Qualify</h2>
+      <div id="nonQualifyList"></div>
+    </div>
+    <div class="qualify">
+      <h2>Qualified</h2>
+      <div id="qualifyList"></div>
+    </div>
+  </div>
+
+  <script>
+    function toggleQualify(index) {
+      participants[index].qualified = !participants[index].qualified;
+      render();
+    }
+
+    function togglePresentMode() {
+      document.body.classList.toggle('present-mode');
+    }
+
+    const participants = [];
+
+    function addPerson() {
+      const name = document.getElementById('personName').value.trim();
+      if (!name) return;
+      participants.push({ name, qualified: false });
+      document.getElementById('personName').value = '';
+      render();
+    }
+
+    function render() {
+      const nonQ = document.getElementById('nonQualifyList');
+      const Q = document.getElementById('qualifyList');
+      nonQ.innerHTML = '';
+      Q.innerHTML = '';
+
+      participants.forEach((p, i) => {
+        const div = document.createElement('div');
+        div.className = 'entry';
+        div.innerHTML = `<span>#${i + 1} ${p.name}</span> <button onclick="toggleQualify(${i})">➡️</button>`;
+        if (p.qualified) Q.appendChild(div);
+        else nonQ.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>
