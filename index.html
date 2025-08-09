@@ -1,312 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Scoreboard</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f832e7, #d1206e, #f8770f);
-      background-size: 600% 600%;
-      animation: gradientBG 20s ease infinite;
-      color: #fff;
-      text-align: center;
-      padding: 20px;
-      margin: 0;
-      position: relative; /* To position the top-right button */
-    }
-    @keyframes gradientBG {
-      0% {background-position: 0% 50%;}
-      50% {background-position: 100% 50%;}
-      100% {background-position: 0% 50%;}
-    }
-    h1, h2 {
-      margin-bottom: 20px;
-    }
-    #controls {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-width: 800px;
-      margin: 0 auto 30px auto;
-      padding: 10px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
-    }
-    .control-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: center;
-    }
-    .control-group input,
-    .control-group select,
-    .control-group button {
-      flex: 1 1 auto;
-      min-width: 120px;
-      max-width: 180px;
-      padding: 8px;
-      font-size: 14px;
-      border: none;
-      border-radius: 5px;
-    }
-    button {
-      background-color: #6a11cb;
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    button:hover {
-      background-color: #2575fc;
-    }
-    #scoreboard {
-      max-width: 800px;
-      margin: 40px auto;
-      text-align: left;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      position: relative;
-    }
-    .entry {
-      background: #2a2a2a;
-      padding: 20px;
-      margin: 5px 0;
-      border-radius: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: transform 0.5s ease, background-color 0.5s ease;
-      position: relative;
-    }
-    .entry.highlight {
-      background: rgba(255, 255, 255, 0.2);
-      transform: scale(1.05);
-    }
-    .score {
-      font-size: 24px;
-      font-weight: bold;
-      min-width: 100px;
-      text-align: right;
-    }
-    .present-mode body {
-      background: #111 !important;
-    }
-    .present-mode #controls {
-      display: none;
-    }
-    .present-mode #scoreboard .entry {
-      font-size: 1.8em;
-      background: #2a2a2a;
-    }
-    .present-mode h1,
-    .present-mode h2 {
-      font-size: 2em;
-    }
-    .green-screen body {
-      background: #00ff00 !important;
-    }
-    #presentToggles {
-      margin: 20px auto;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
-    /* Semi Final button styling */
-    #semiFinalBtn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: #fff;
-      color: #000;
-      padding: 10px 15px;
-      border-radius: 5px;
-      text-decoration: none;
-      font-weight: bold;
-      z-index: 1000;
-      user-select: none;
-      transition: background-color 0.3s ease;
-    }
-    #semiFinalBtn:hover {
-      background-color: #ddd;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Scoreboard</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f832e7, #d1206e, #f8770f);
+    background-size: 600% 600%;
+    animation: gradientBG 20s ease infinite;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    margin: 0;
+  }
+  @keyframes gradientBG {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+  }
+
+  h1, h2 { margin-bottom: 20px; }
+
+  #controls {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 800px;
+    margin: 0 auto 30px auto;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+  }
+  .control-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+  .control-group input,
+  .control-group select,
+  .control-group button {
+    flex: 1 1 auto;
+    min-width: 120px;
+    max-width: 180px;
+    padding: 8px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+  }
+  button {
+    background-color: #6a11cb;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover { background-color: #2575fc; }
+
+  /* SCOREBOARD STYLING */
+  #scoreboard {
+    max-width: 800px;
+    margin: 40px auto;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+  }
+  .entry {
+    background: #2a2a2a;
+    padding: 20px;
+    margin: 5px 0;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    transition: transform 0.6s ease, background-color 0.4s ease, opacity 0.5s ease;
+  }
+  .entry.highlight {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.03);
+  }
+  .entry.new-entry {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  .entry.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .score {
+    font-size: 24px;
+    font-weight: bold;
+    min-width: 100px;
+    text-align: right;
+  }
+
+  /* Green screen mode */
+  .green-screen {
+    background: #00ff00 !important;
+  }
+</style>
 </head>
 <body>
-  <a id="semiFinalBtn" href="sf.html">Semi Final</a>
-  <h1>🎤 Scoreboard Voting</h1>
+<h1>🎤 Scoreboard Voting</h1>
 
-  <div id="controls">
-    <div class="control-group">
-      <input id="personName" type="text" placeholder="Enter name" />
-      <button onclick="addPerson()">Add Person</button>
-    </div>
-    <div class="control-group">
-      <select id="sharedNameSelect"></select>
-      <input id="pointsInput" type="number" placeholder="Points" />
-      <button onclick="addPoints()">Add Points</button>
-    </div>
-    <div class="control-group">
-      <button onclick="undoLastAction()">Undo Last Action</button>
-    </div>
+<div id="controls">
+  <div class="control-group">
+    <input id="personName" type="text" placeholder="Enter name" />
+    <button onclick="addPerson()">Add Person</button>
   </div>
-
-  <div id="presentToggles">
-    <button onclick="togglePresentMode()">🎥 Toggle Present Mode</button>
+  <div class="control-group">
+    <select id="sharedNameSelect"></select>
+    <input id="pointsInput" type="number" placeholder="Points" />
+    <select id="pointType">
+      <option value="jury">Jury</option>
+      <option value="public">Audience</option>
+    </select>
+    <button onclick="addPoints()">Add Points</button>
+  </div>
+  <div class="control-group">
+    <button onclick="undoLastAction()">Undo Last Action</button>
     <button onclick="toggleGreenScreen()">💚 Toggle Green Screen</button>
   </div>
+</div>
 
-  <h2>📊 Leaderboard</h2>
-  <div id="scoreboard"></div>
+<h2>📊 Leaderboard</h2>
+<div id="scoreboard"></div>
 
-  <script>
-    const people = {};
-    const history = [];
+<script>
+  const people = {};
+  const history = [];
 
-    function saveState() {
-      history.push(JSON.parse(JSON.stringify(people)));
-      if (history.length > 50) history.shift();
+  function saveState() {
+    history.push(JSON.parse(JSON.stringify(people)));
+    if (history.length > 50) history.shift();
+  }
+
+  function undoLastAction() {
+    if (history.length === 0) return;
+    const prevState = history.pop();
+    for (const key in prevState) {
+      people[key] = prevState[key];
     }
+    updateScoreboard();
+  }
 
-    function undoLastAction() {
-      if (history.length === 0) return;
-      const prevState = history.pop();
-      for (const key in prevState) {
-        people[key] = prevState[key];
-      }
+  function addPerson() {
+    const name = document.getElementById('personName').value.trim();
+    if (name && !people[name]) {
+      saveState();
+      people[name] = { jury: 0, public: 0, total: 0 };
+      updateSelect();
       updateScoreboard();
     }
+    document.getElementById('personName').value = '';
+  }
 
-    function addPerson() {
-      const name = document.getElementById('personName').value.trim();
-      if (name && !people[name]) {
-        saveState();
-        people[name] = { jury: 0, public: 0, total: 0 };
-        updateSelect();
-        updateScoreboard();
-      }
-      document.getElementById('personName').value = '';
+  function updateSelect() {
+    const select = document.getElementById('sharedNameSelect');
+    select.innerHTML = '';
+    for (const name in people) {
+      const option = document.createElement('option');
+      option.value = name;
+      option.textContent = name;
+      select.appendChild(option);
     }
+  }
 
-    function updateSelect() {
-      const select = document.getElementById('sharedNameSelect');
-      select.innerHTML = '';
-      for (const name in people) {
-        const option = document.createElement('option');
-        option.value = name;
-        option.textContent = name;
-        select.appendChild(option);
-      }
-    }
-
-    function animateCountUp(element, from, to, duration = 1000) {
-      const start = performance.now();
-      function step(timestamp) {
-        const progress = Math.min((timestamp - start) / duration, 1);
-        const value = Math.floor(from + (to - from) * progress);
-        element.textContent = value + ' pts';
-        if (progress < 1) {
-          requestAnimationFrame(step);
-        }
-      }
-      requestAnimationFrame(step);
-    }
-
-    function addPoints() {
-      const name = document.getElementById('sharedNameSelect').value;
-      const points = parseInt(document.getElementById('pointsInput').value);
-      if (name && !isNaN(points) && people[name]) {
-        saveState();
-        people[name].jury += points;
-        updateScoreboard(name);
-        document.getElementById('pointsInput').value = '';
+  function animateCountUp(element, from, to, duration = 1000) {
+    const start = performance.now();
+    function step(timestamp) {
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const value = Math.floor(from + (to - from) * progress);
+      element.textContent = value + ' pts';
+      if (progress < 1) {
+        requestAnimationFrame(step);
       }
     }
+    requestAnimationFrame(step);
+  }
 
-    function togglePresentMode() {
-      document.body.classList.toggle('present-mode');
-      if (!document.body.classList.contains('present-mode')) {
-        document.body.classList.remove('green-screen');
+  function addPoints() {
+    const name = document.getElementById('sharedNameSelect').value;
+    const points = parseInt(document.getElementById('pointsInput').value);
+    const type = document.getElementById('pointType').value;
+    if (name && !isNaN(points) && people[name]) {
+      saveState();
+      people[name][type] += points;
+      updateScoreboard(name);
+      document.getElementById('pointsInput').value = '';
+    }
+  }
+
+  function toggleGreenScreen() {
+    document.body.classList.toggle('green-screen');
+  }
+
+  function updateScoreboard(highlightName = null) {
+    const board = document.getElementById('scoreboard');
+    const sorted = Object.entries(people).sort((a, b) => {
+      const totalA = a[1].jury + a[1].public;
+      const totalB = b[1].jury + b[1].public;
+      return totalB - totalA;
+    });
+
+    // Store old positions for FLIP animation
+    const oldPositions = new Map();
+    Array.from(board.children).forEach(child => {
+      oldPositions.set(child.dataset.name, child.getBoundingClientRect().top);
+    });
+
+    // Rebuild scoreboard
+    board.innerHTML = '';
+    sorted.forEach(([name, scores], index) => {
+      const total = scores.jury + scores.public;
+      scores.total = total;
+
+      const entry = document.createElement('div');
+      entry.className = 'entry';
+      entry.dataset.name = name;
+
+      entry.innerHTML = `
+        <div class="label"><strong>#${index + 1} ${name}</strong><br>
+        <small>Jury: ${scores.jury}, Audience: ${scores.public}</small></div>
+        <div class="score" data-total="${total}">${total} pts</div>
+      `;
+
+      if (name === highlightName) {
+        entry.classList.add('highlight');
+        setTimeout(() => entry.classList.remove('highlight'), 1000);
       }
-    }
 
-    function toggleGreenScreen() {
-      if (document.body.classList.contains('present-mode')) {
-        document.body.classList.toggle('green-screen');
+      board.appendChild(entry);
+    });
+
+    // FLIP animation
+    const newPositions = new Map();
+    Array.from(board.children).forEach(child => {
+      newPositions.set(child.dataset.name, child.getBoundingClientRect().top);
+    });
+
+    newPositions.forEach((newTop, name) => {
+      const oldTop = oldPositions.get(name);
+      if (oldTop !== undefined) {
+        const delta = oldTop - newTop;
+        const element = board.querySelector(`[data-name="${name}"]`);
+        element.style.transform = `translateY(${delta}px)`;
+        element.style.transition = 'none';
+        requestAnimationFrame(() => {
+          element.style.transition = 'transform 0.6s ease';
+          element.style.transform = '';
+        });
       }
-    }
-
-    function updateScoreboard(highlightName = null) {
-      const board = document.getElementById('scoreboard');
-      const sorted = Object.entries(people).sort((a, b) => {
-        const totalA = a[1].jury + a[1].public;
-        const totalB = b[1].jury + b[1].public;
-        return totalB - totalA;
-      });
-
-      const oldPositions = new Map();
-      Array.from(board.children).forEach(child => {
-        oldPositions.set(child.dataset.name, child.getBoundingClientRect().top);
-      });
-
-      const existingEntries = {};
-      Array.from(board.children).forEach(child => {
-        existingEntries[child.dataset.name] = child;
-      });
-
-      sorted.forEach(([name, scores], index) => {
-        const newTotal = scores.jury + scores.public;
-        scores.total = newTotal;
-
-        let entry = existingEntries[name];
-        if (!entry) {
-          entry = document.createElement('div');
-          entry.className = 'entry';
-          entry.dataset.name = name;
-          const label = document.createElement('div');
-          label.className = 'label';
-          entry.appendChild(label);
-          const score = document.createElement('div');
-          score.className = 'score';
-          score.dataset.total = '0';
-          entry.appendChild(score);
-          board.appendChild(entry);
-        }
-
-        entry.querySelector('.label').innerHTML = `<strong>#${index + 1} ${name}</strong><br><small>Jury: ${scores.jury}, Public: ${scores.public}</small>`;
-        const scoreEl = entry.querySelector('.score');
-        const oldTotal = parseInt(scoreEl.dataset.total) || 0;
-        animateCountUp(scoreEl, oldTotal, newTotal);
-        scoreEl.dataset.total = newTotal;
-
-        if (name === highlightName) entry.classList.add('highlight');
-        else entry.classList.remove('highlight');
-
-        board.appendChild(entry);
-      });
-
-      const newPositions = new Map();
-      Array.from(board.children).forEach(child => {
-        newPositions.set(child.dataset.name, child.getBoundingClientRect().top);
-      });
-
-      newPositions.forEach((newTop, name) => {
-        const entry = existingEntries[name];
-        if (entry && oldPositions.has(name)) {
-          const delta = oldPositions.get(name) - newTop;
-          if (delta !== 0) {
-            entry.style.transition = 'none';
-            entry.style.transform = `translateY(${delta}px)`;
-            requestAnimationFrame(() => {
-              entry.style.transition = 'transform 0.5s ease';
-              entry.style.transform = '';
-            });
-          }
-        }
-      });
-    }
-  </script>
+    });
+  }
+</script>
 </body>
 </html>
 
